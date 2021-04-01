@@ -1,41 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
-import { getSampleResponse } from './utils/apiWrapper';
 
-const App = () => {
-  const [time, setTime] = useState(0);
-
-  useEffect(() => {
-    const getTime = async () => {
-      const time = await getSampleResponse();
-      if (!time.error) {
-        setTime(time.data.time);
-      }
-    };
-
-    getTime();
-  }, []);
+const App = () => {  
+	const [username, setUsername] = useState('');
+	
+  const login = () => { }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>The current time is {time}</p>
-      </header>
+    <div className='container'>
+      <form onSubmit={login}>
+        <h1>Spotify Data Visualization</h1>
+
+        <br></br>
+
+        <label id='label' for='username'><b>Username</b></label>
+        <input id='box' type='text' value={username} onChange={(e) => setUsername(e.target.value)}
+         placeholder='Enter Username' name='username' required/>
+	      
+        <button id='button' type='submit'>Sign In</button>
+      </form>
     </div>
-  );
-}
+	  )
+  }
 
 export default App;

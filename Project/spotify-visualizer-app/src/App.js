@@ -1,41 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
-import { getSampleResponse } from './utils/apiWrapper';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-const App = () => {
-  const [time, setTime] = useState(0);
+const App = () => {  
+	const [username, setUsername] = useState('');
 
-  useEffect(() => {
-    const getTime = async () => {
-      const time = await getSampleResponse();
-      if (!time.error) {
-        setTime(time.data.time);
-      }
-    };
-
-    getTime();
-  }, []);
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <p>The current time is {time}</p>
-      </header>
+  const Visualization = ({history}) => (
+    <div>
+      <h1>Hi {username}!</h1>
+      <button onClick={() => history.push('/')}>Go to home</button>
     </div>
   );
-}
+
+  return (
+    <div>
+      <Router>
+        <main>
+          <Switch>
+            <Route path="/" exact render={() =>
+              <div className='container'>
+                <h1>Spotify Data Visualization</h1>
+
+                <br></br>
+
+                <label id='label' for='username'><b>Username</b></label>
+                <input id='box' type='text' value={username} onChange={(e) => setUsername(e.target.value)}
+                  placeholder='Enter Username' name='username' required/>
+
+        
+          
+                <nav>
+                  <a href={`/user/${username}`}><button id='button'>Sign In</button></a>
+                </nav>
+              </div>
+            }/>
+            
+            <Route path="/:username" component={ Visualization }/>
+          </Switch>
+        </main>
+      </Router>
+
+    </div>
+	  )
+  }
 
 export default App;

@@ -18,24 +18,9 @@ h1 {
   text-align: center;
 }
 
-/* Style for all textboxes */
-#box {
-  height: 35px;
-}
-
 /* Style for all labels */
 #label {
   font-size: medium;
-}
-
-/* Style for all text in textboxes */
-input[type=text] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
 }
 
 /* Style for all buttons */

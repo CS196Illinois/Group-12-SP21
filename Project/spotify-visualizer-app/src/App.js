@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 
-const data = {
+//data for barchart
+const bardata = {
   labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
   datasets: [
     {
@@ -30,7 +31,8 @@ const data = {
   ]
 }
 
-const options = {
+//options for barchart
+const baroptions = {
   indexAxis: 'y',
   // Elements options apply to all of the options unless overridden in a dataset
   // In this case, we are setting the border of each horizontal bar to be 2px wide
@@ -51,19 +53,49 @@ const options = {
   },
 };
 
-const App = () => {  
-	const [username, setUsername] = useState('');
+//data for piechart
+const piedata= {
+  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+  datasets: [
+    {
+      label: '# of Votes',
+      data: [12, 19, 3, 5, 2, 3],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+      ],
+      borderColor: [
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+        'rgba(255, 159, 64, 1)',
+      ],
+      borderWidth: 1,
+    },
+  ],
+};
 
+const App = () => {  
+
+  //visualization page
   const Visualization = ({history}) => (
     <div>
-      <h1>Hi {username}!</h1>
+      <h1>Hi!</h1>
       <button onClick={() => history.push('/')}>Go to home</button>
       <div>
-        <Bar data={data} options={options}/>
+        <Bar data={bardata} options={baroptions}/>
+        <Pie data={piedata}/>
       </div>
     </div>
   );
 
+  //Sign in page with routing
   return (
     <div>
       <Router>
@@ -75,12 +107,8 @@ const App = () => {
 
                 <br></br>
 
-                <label id='label' for='username'><b>Username</b></label>
-                <input id='box' type='text' value={username} onChange={(e) => setUsername(e.target.value)}
-                  placeholder='Enter Username' name='username' required/>
-        
                 <nav>
-                  <a href={`/user/${username}`}><button id='button'>Sign In</button></a>
+                  <a href={`/user/`}><button id='button'>Sign In With Spotify</button></a>
                 </nav>
               </div>
             }/>

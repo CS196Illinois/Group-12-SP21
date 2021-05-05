@@ -14,28 +14,29 @@ in cmd, enter "set CLIENT_ID='client_id_from_discord'". you do the same for clie
 and secret key. 
 '''
 
-SPOTIPY_CLIENT_ID =os.environ.get('CLIENT_ID')
-SPOTIPY_CLIENT_SECRET =os.environ.get('CLIENT_SECRET')
+SPOTIPY_CLIENT_ID ='9f051e6b07e8444d8653a608d2d28d91'#os.environ.get('CLIENT_ID')
+SPOTIPY_CLIENT_SECRET ='95f78cbfa84f4275b0f08cc18230a9d6'#os.environ.get('CLIENT_SECRET')
 SPOTIPY_REDIRECT_URI = 'http://localhost:8888/callback'
 app = Flask(__name__)
 
-app.secret_key = os.environ.get('SECRET_KEY')
+app.secret_key = 'O\xe3i\xcf\xde\x9f\xc7v\xc7\xb3g\x89\x95\xb8.\xe1\xaaU\x97\xa8(U\xce\x04'#os.environ.get('SECRET_KEY')
+scopes = "user-read-private user-top-read user-library-read user-read-recently-played user-follow-modify"
 
-
-@app.route('/')
+@app.route('/login')
 def login():
 	sp = spotipy.oauth2.SpotifyOAuth(
 		client_id=SPOTIPY_CLIENT_ID,
 		client_secret=SPOTIPY_CLIENT_SECRET,
 		redirect_uri=SPOTIPY_REDIRECT_URI,
-		scope="user-library-read"
+		scope= scopes
 		)
 	auth_url = sp.get_authorize_url()
 	return redirect(auth_url)
 
 @app.route('/index')
 def index():
-	return '<a href="/go">Get Current Saved Tracks</a>'
+	buttons = '<a href="/get_recently_added_artists">get_recently_added_artists</a><br>'+'<a href="/get_recently_played">get_recently_played</a><br>'+'<a href="/get_top_artists">get_top_artists</a>' 
+	return buttons
 
 @app.route('/callback')
 def callback():
@@ -43,14 +44,13 @@ def callback():
 		client_id=SPOTIPY_CLIENT_ID,
 		client_secret=SPOTIPY_CLIENT_SECRET,
 		redirect_uri=SPOTIPY_REDIRECT_URI,
-		scope="user-library-read"
+		scope=scopes
 	)
 	session.clear()
 	code = request.args.get('code')
 	token_info = sp_oauth.get_access_token(code)
 	session["token_info"] = token_info
 	return redirect('index')
-
 
 def get_token(session):
 	token_valid = False
@@ -64,15 +64,14 @@ def get_token(session):
 		client_id=SPOTIPY_CLIENT_ID,
 		client_secret=SPOTIPY_CLIENT_SECRET,
 		redirect_uri=SPOTIPY_REDIRECT_URI,
-		scope="user-library-read"
+		scope=scopes
 		)
 		token_info = sp.refresh_access_token(session.get('token_info').get('refresh_token')) 	
 	token_valid = True
 	return token_info, token_valid
 
-
-@app.route('/go',methods=['GET'])
-def go():
+@app.route('/get_recently_added_artists',methods=['GET'])
+def get_top():
 	session['token_info'], authorized = get_token(session)
 	session.modified = True
 	if not authorized:
@@ -83,6 +82,35 @@ def go():
 	for item in response['items']:
 		for artist in item['track']['album']['artists']:
 			artists.append(artist['name'])
+	return(jsonify(artists))
+
+@app.route('/get_recently_played',methods=['GET'])
+def get_recent():
+	session['token_info'], authorized = get_token(session)
+	session.modified = True
+	if not authorized:
+		return redirect('/')
+	sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+	response = sp.current_user_recently_played()
+	played = []
+	
+	for item in response['items']:
+		for artist in item['track']['album']['artists']:
+			played.append(artist['name'])
+	return(jsonify(played))
+
+@app.route('/get_top_artists',methods=['GET'])
+def get_followed():
+	session['token_info'], authorized = get_token(session)
+	session.modified = True
+	if not authorized:
+		return redirect('/')
+	sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+	response = sp.current_user_top_artists(limit=50)
+
+	artists = []
+	for item in response['items']:
+		artists.append([item['name'],item['popularity']])
 	return(jsonify(artists))
 
 if __name__ == '__main__':

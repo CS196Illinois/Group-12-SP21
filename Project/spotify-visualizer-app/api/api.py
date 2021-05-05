@@ -14,12 +14,12 @@ in cmd, enter "set CLIENT_ID='client_id_from_discord'". you do the same for clie
 and secret key. 
 '''
 
-SPOTIPY_CLIENT_ID =os.environ.get('CLIENT_ID')
-SPOTIPY_CLIENT_SECRET =os.environ.get('CLIENT_SECRET')
+SPOTIPY_CLIENT_ID ='9f051e6b07e8444d8653a608d2d28d91'#os.environ.get('CLIENT_ID')
+SPOTIPY_CLIENT_SECRET ='95f78cbfa84f4275b0f08cc18230a9d6'#os.environ.get('CLIENT_SECRET')
 SPOTIPY_REDIRECT_URI = 'http://localhost:8888/callback'
 app = Flask(__name__)
 
-app.secret_key = os.environ.get('SECRET_KEY')
+app.secret_key = '\xc4d\r\x84`\x83z]\x19))F\x04\xe8\x8do\x14\xed\xf8|\xf7\xac31' #os.environ.get('SECRET_KEY')
 scopes = "user-read-private user-top-read user-library-read user-read-recently-played user-follow-modify"
 
 @app.route('/login')
@@ -70,7 +70,7 @@ def get_token(session):
 	token_valid = True
 	return token_info, token_valid
 
-@app.route('/get_recently_added_artists',methods=['GET'])
+@app.route('/api/get_recently_added_artists',methods=['GET'])
 def get_top():
 	session['token_info'], authorized = get_token(session)
 	session.modified = True
@@ -84,7 +84,7 @@ def get_top():
 			artists.append(unidecode.unidecode(artist['name']))
 	return(jsonify(artists))
 
-@app.route('/get_recently_played',methods=['GET'])
+@app.route('/api/get_recently_played',methods=['GET'])
 def get_recent():
 	session['token_info'], authorized = get_token(session)
 	session.modified = True
@@ -99,7 +99,7 @@ def get_recent():
 			played.append(unidecode.unidecode(artist['name']))
 	return(jsonify(played))
 
-@app.route('/get_top_artists',methods=['GET'])
+@app.route('/api/get_top_artists',methods=['GET'])
 def get_followed():
 	session['token_info'], authorized = get_token(session)
 	session.modified = True
@@ -114,4 +114,4 @@ def get_followed():
 	return(jsonify(artists))
 
 if __name__ == '__main__':
-	app.run(host='localhost',debug=True,port=8888)
+	app.run(host='localhost',debug=True)

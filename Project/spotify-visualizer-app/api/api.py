@@ -5,7 +5,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import time
 import os
-
+import unidecode
 
 '''
 because this is being pushed to github, if you want to run this you have to 
@@ -14,12 +14,12 @@ in cmd, enter "set CLIENT_ID='client_id_from_discord'". you do the same for clie
 and secret key. 
 '''
 
-SPOTIPY_CLIENT_ID ='9f051e6b07e8444d8653a608d2d28d91'#os.environ.get('CLIENT_ID')
-SPOTIPY_CLIENT_SECRET ='95f78cbfa84f4275b0f08cc18230a9d6'#os.environ.get('CLIENT_SECRET')
+SPOTIPY_CLIENT_ID =os.environ.get('CLIENT_ID')
+SPOTIPY_CLIENT_SECRET =os.environ.get('CLIENT_SECRET')
 SPOTIPY_REDIRECT_URI = 'http://localhost:8888/callback'
 app = Flask(__name__)
 
-app.secret_key = 'O\xe3i\xcf\xde\x9f\xc7v\xc7\xb3g\x89\x95\xb8.\xe1\xaaU\x97\xa8(U\xce\x04'#os.environ.get('SECRET_KEY')
+app.secret_key = os.environ.get('SECRET_KEY')
 scopes = "user-read-private user-top-read user-library-read user-read-recently-played user-follow-modify"
 
 @app.route('/login')
@@ -81,7 +81,7 @@ def get_top():
 	artists = []
 	for item in response['items']:
 		for artist in item['track']['album']['artists']:
-			artists.append(artist['name'])
+			artists.append(unidecode.unidecode(artist['name']))
 	return(jsonify(artists))
 
 @app.route('/get_recently_played',methods=['GET'])
@@ -96,7 +96,7 @@ def get_recent():
 	
 	for item in response['items']:
 		for artist in item['track']['album']['artists']:
-			played.append(artist['name'])
+			played.append(unidecode.unidecode(artist['name']))
 	return(jsonify(played))
 
 @app.route('/get_top_artists',methods=['GET'])
@@ -110,7 +110,7 @@ def get_followed():
 
 	artists = []
 	for item in response['items']:
-		artists.append([item['name'],item['popularity']])
+		artists.append([unidecode.unidecode(item['name']),item['popularity']])
 	return(jsonify(artists))
 
 if __name__ == '__main__':

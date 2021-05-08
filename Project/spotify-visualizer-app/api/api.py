@@ -13,16 +13,15 @@ use environment variables. You have to set three (CLIENT_ID, CLIENT_SECRET, and 
 in cmd, enter "set CLIENT_ID='client_id_from_discord'". you do the same for client_secret 
 and secret key. 
 '''
-
-SPOTIPY_CLIENT_ID ='9f051e6b07e8444d8653a608d2d28d91'#os.environ.get('CLIENT_ID')
-SPOTIPY_CLIENT_SECRET ='95f78cbfa84f4275b0f08cc18230a9d6'#os.environ.get('CLIENT_SECRET')
+SPOTIPY_CLIENT_ID =os.environ.get('CLIENT_ID')
+SPOTIPY_CLIENT_SECRET =os.environ.get('CLIENT_SECRET')
 SPOTIPY_REDIRECT_URI = 'http://localhost:8888/callback'
 app = Flask(__name__)
 
-app.secret_key = '\xc4d\r\x84`\x83z]\x19))F\x04\xe8\x8do\x14\xed\xf8|\xf7\xac31' #os.environ.get('SECRET_KEY')
+app.secret_key = os.environ.get('SECRET_KEY')
 scopes = "user-read-private user-top-read user-library-read user-read-recently-played user-follow-modify"
 
-@app.route('/login')
+@app.route('/')
 def login():
 	sp = spotipy.oauth2.SpotifyOAuth(
 		client_id=SPOTIPY_CLIENT_ID,
@@ -70,7 +69,7 @@ def get_token(session):
 	token_valid = True
 	return token_info, token_valid
 
-@app.route('/api/get_recently_added_artists',methods=['GET'])
+@app.route('/api/get_recently_added_artists',methods=['GET', 'POST'])
 def get_top():
 	session['token_info'], authorized = get_token(session)
 	session.modified = True
@@ -86,6 +85,14 @@ def get_top():
 	for artist in artists:
 		freq[artist] = artists.count(artist)
 	freq = dict(sorted(freq.items(), key=lambda item: item[1]))
+	data,labels = [],[]
+	for point in freq:
+		data.append(freq[point])
+		labels.append(point)
+	print(data,labels)
+	return {'data': data},{'labels': labels}
+
+@app.route('/api/get_recently_played',methods=['GET', 'POST'])
 	print(freq)
 	return freq
 
@@ -108,7 +115,7 @@ def get_recent():
 	freq2 = dict(sorted(freq.items(), key=lambda item: item[1]))
 	return(freq2)
 
-@app.route('/api/get_top_artists',methods=['GET'])
+@app.route('/api/get_top_artists',methods=['GET', 'POST'])
 def get_followed():
 	session['token_info'], authorized = get_token(session)
 	session.modified = True

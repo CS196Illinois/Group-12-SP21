@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Bar, Pie } from 'react-chartjs-2';
+import { Bar, Pie, Line } from 'react-chartjs-2';
 
 //data for horizontal bar chart #1
 const bardata1 = {
-  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+  labels: [],
   datasets: [
     {
       label: '#',
-      data: [12, 19, 3, 5, 2, 3],
+      data: [],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',
@@ -56,11 +56,11 @@ const baroptions1 = {
 
 //data for pie chart #1
 const piedata1= {
-  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+  labels: [],
   datasets: [
     {
       label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
+      data: [],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',
@@ -99,11 +99,11 @@ const pieoptions1 = {
 
 //data for horizontal bar chart #2
 const bardata2 = {
-  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+  labels: [],
   datasets: [
     {
       label: '#',
-      data: [12, 19, 3, 5, 2, 3],
+      data: [],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',
@@ -150,11 +150,11 @@ const baroptions2 = {
 
 //data for pie chart #2
 const piedata2= {
-  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+  labels: [],
   datasets: [
     {
       label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
+      data: [],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(54, 162, 235, 0.2)',
@@ -192,6 +192,31 @@ const pieoptions2 = {
 };
 
 const App = () => {  
+  const [recent_artists, setRArtists] = useState(0);
+  const [recent_played, setRPlayed] = useState(0);
+  const [top_artists, setTArtists] = useState(0);
+
+  useEffect(() => {
+    const requestOptions = {
+        mode: 'no-cors',
+        method: 'GET',
+    };
+    fetch('http://localhost:8888/api/get_recently_added_artists', requestOptions).then(res => res.json()).then(data => {
+      setRArtists(recent_artists);
+    });
+    fetch('http://localhost:8888/api/get_recently_played', requestOptions).then(res => res.json()).then(data => {
+      setRPlayed(recent_played);
+    });
+    fetch('http://localhost:8888/api/get_top_artists', requestOptions).then(res => res.json()).then(data => {
+      setTArtists(top_artists);
+    });
+  }, []);
+
+
+
+  //visualization page
+  const Visualization = ({history}) => (
+    <div>
 
   //visualization page
   const Visualization = ({history}) => (
@@ -199,11 +224,12 @@ const App = () => {
       <h1>This is a sample data visualization page</h1>
 
       <br></br>
-
       <button className="go-home" onClick={() => history.push('/')}>Home</button>
       <a href="https://github.com/CS196Illinois/Group-12-SP21">
         <button className="github">GitHub</button>
       </a>
+      <h1>This is a sample data visualization page</h1>
+      <br></br>
       <div className="chart-container">
         <article className="horizontalbar-container">
           <Bar data={bardata1} options={baroptions1}/>
@@ -245,7 +271,7 @@ const App = () => {
       </Router>
 
     </div>
-	  )
+    )
   }
 
 export default App;

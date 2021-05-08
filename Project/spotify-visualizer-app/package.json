@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "chart.js": "^3.2.1",
+    "chartjs-adapter-luxon": "^1.0.0",
     "react": "^17.0.2",
     "react-chartjs-2": "^3.0.3",
     "react-chartjs2": "^1.2.1",
@@ -19,7 +20,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-api": "cd api && flask run --port=8888 --host=localhost --no-debugger",
+    "start-api": "cd api && flask run --port=5000",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -42,7 +43,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8888",
+  "proxy": "http://127.0.0.1:5000/",
   "devDependencies": {
     "web-vitals": "^1.1.1"
   }

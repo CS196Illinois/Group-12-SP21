@@ -7,6 +7,7 @@ import time
 import os
 import unidecode
 
+
 '''
 because this is being pushed to github, if you want to run this you have to 
 use environment variables. You have to set three (CLIENT_ID, CLIENT_SECRET, and SECRET_KEY).
@@ -21,6 +22,7 @@ set SECRET_KEY='\xc4d\r\x84`\x83z]\x19))F\x04\xe8\x8do\x14\xed\xf8|\xf7\xac31'
 SPOTIPY_CLIENT_ID =os.environ.get('CLIENT_ID')
 SPOTIPY_CLIENT_SECRET =os.environ.get('CLIENT_SECRET')
 SPOTIPY_REDIRECT_URI = 'http://localhost:5000/callback'
+
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.secret_key = os.environ.get('SECRET_KEY')
@@ -144,3 +146,4 @@ def get_followed():
 
 if __name__ == '__main__':
 	app.run(port=5000,debug=True)
+

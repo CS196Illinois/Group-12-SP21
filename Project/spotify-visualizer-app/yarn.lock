@@ -9021,6 +9021,7 @@ react-chartjs2@^1.2.1:
   resolved "https://registry.yarnpkg.com/react-chartjs2/-/react-chartjs2-1.2.1.tgz#d7096108a35a745f19cb51dfbcc3320d3ee4dfad"
   integrity sha512-ir40NsVgJvd2y0LiN/E5k5/V7vzKAop5pqymKx6kVyOcVCwautUo2VjgSxAK14QGBgu8WhRmtr+YxutziWw7Og==
 
+
 react-dev-utils@^11.0.3:
   version "11.0.4"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-11.0.4.tgz#a7ccb60257a1ca2e0efe7a83e38e6700d17aa37a"

@@ -5,14 +5,9 @@ body {
   height: 100%;
 }
 
-.container {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 30%;
+canvas {
+  height: 900px;
 }
-
 /* Style for the title */
 h1 {
   text-align: center;
@@ -20,7 +15,7 @@ h1 {
 
 /* Style for all textboxes */
 #box {
-  height: 35px;
+  height: 305px;
 }
 
 /* Style for all labels */

@@ -13,12 +13,16 @@ use environment variables. You have to set three (CLIENT_ID, CLIENT_SECRET, and 
 in cmd, enter "set CLIENT_ID='client_id_from_discord'". you do the same for client_secret 
 and secret key. 
 '''
-
+'''
+set CLIENT_ID='9f051e6b07e8444d8653a608d2d28d91'
+set CLIENT_SECRET='95f78cbfa84f4275b0f08cc18230a9d6'
+set SECRET_KEY='\xc4d\r\x84`\x83z]\x19))F\x04\xe8\x8do\x14\xed\xf8|\xf7\xac31'
+'''
 SPOTIPY_CLIENT_ID =os.environ.get('CLIENT_ID')
 SPOTIPY_CLIENT_SECRET =os.environ.get('CLIENT_SECRET')
-SPOTIPY_REDIRECT_URI = 'http://localhost:8888/callback'
+SPOTIPY_REDIRECT_URI = 'http://localhost:5000/callback'
 app = Flask(__name__)
-
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.secret_key = os.environ.get('SECRET_KEY')
 scopes = "user-read-private user-top-read user-library-read user-read-recently-played user-follow-modify"
 
@@ -32,11 +36,16 @@ def login():
 		)
 	auth_url = sp.get_authorize_url()
 	return redirect(auth_url)
-
 @app.route('/index')
 def index():
 	buttons = '<a href="/api/get_recently_added_artists">get_recently_added_artists</a><br>'+'<a href="/api/get_recently_played">get_recently_played</a><br>'+'<a href="/api/get_top_artists">get_top_artists</a>' 
 	return buttons
+
+@app.route('/logout')
+def logout():
+	session.clear()
+	return redirect('/')
+
 
 @app.route('/callback')
 def callback():
@@ -90,7 +99,6 @@ def get_top():
 	for point in freq:
 		data.append(freq[point])
 		labels.append(point)
-	print(data,labels)
 	return {'data': data},{'labels': labels}
 
 @app.route('/api/get_recently_played',methods=['GET', 'POST'])
@@ -119,16 +127,20 @@ def get_followed():
 	if not authorized:
 		return redirect('/')
 	sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
-	response = sp.current_user_top_artists(limit=50)
-
-	artists = {}
+	response = sp.current_user_top_artists(limit=15,time_range='medium_term')
+	data = []
+	vals = []
+	freq = []
 	for item in response['items']:
 		name = item['name']
 		pop = item['popularity']
-		artists[name] = pop
-	freq = dict(sorted(artists.items(), key=lambda item: pop))
+		freq.append({'popularity': pop, 'name': name})
+	freq = sorted(freq, key = lambda i: i['popularity'])
+	for item in freq:
+		data.append(item['popularity'])
+		vals.append(item['name'])
+	freq = {k:v for k,v in zip(vals,data)}
 	return freq
 
-
 if __name__ == '__main__':
-	app.run(host='localhost',debug=True)
+	app.run(port=5000,debug=True)

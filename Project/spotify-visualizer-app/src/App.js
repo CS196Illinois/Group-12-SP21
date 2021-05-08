@@ -217,6 +217,13 @@ const App = () => {
   //visualization page
   const Visualization = ({history}) => (
     <div>
+
+  //visualization page
+  const Visualization = ({history}) => (
+    <div>
+      <h1>This is a sample data visualization page</h1>
+
+      <br></br>
       <button className="go-home" onClick={() => history.push('/')}>Home</button>
       <a href="https://github.com/CS196Illinois/Group-12-SP21">
         <button className="github">GitHub</button>

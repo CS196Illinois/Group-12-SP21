@@ -5,6 +5,7 @@ body {
   height: 100%;
 }
 
+/*Style for container*/
 .container {
   position: absolute;
   left: 50%;
@@ -18,27 +19,12 @@ h1 {
   text-align: center;
 }
 
-/* Style for all textboxes */
-#box {
-  height: 35px;
-}
-
 /* Style for all labels */
 #label {
   font-size: medium;
 }
 
-/* Style for all text in textboxes */
-input[type=text] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-/* Style for all buttons */
+/* Style for login page button */
 #button {
   font-size: larger;
   background-color: #268144;
@@ -51,8 +37,40 @@ input[type=text] {
   width: 100%;
 }
 
-/* Add a hover effect for buttons */
+/*Add a hover effect for buttons */
 button:hover {
   opacity: 0.8;
   transition: 0.4s;
+}
+
+/*Go to home button styling*/
+.go-home {
+  position: absolute;
+  top: 2.5%;
+  left: 1%;
+}
+
+.github {
+  position: absolute;
+  top: 2.5%;
+  right: 1%;
+}
+
+/*Container for flexbox styling for the charts*/
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+/*Styling for horizontal bar chart*/
+.horizontalbar-container {
+  height: 50vh;
+  width: 50%;
+}
+
+/*Styling for pie chart*/
+.pie-container {
+  height: 50vh;
+  width: 50%;
 }

@@ -13,7 +13,6 @@ use environment variables. You have to set three (CLIENT_ID, CLIENT_SECRET, and 
 in cmd, enter "set CLIENT_ID='client_id_from_discord'". you do the same for client_secret 
 and secret key. 
 '''
-
 SPOTIPY_CLIENT_ID =os.environ.get('CLIENT_ID')
 SPOTIPY_CLIENT_SECRET =os.environ.get('CLIENT_SECRET')
 SPOTIPY_REDIRECT_URI = 'http://localhost:8888/callback'
@@ -94,6 +93,10 @@ def get_top():
 	return {'data': data},{'labels': labels}
 
 @app.route('/api/get_recently_played',methods=['GET', 'POST'])
+	print(freq)
+	return freq
+
+@app.route('/api/get_recently_played',methods=['GET'])
 def get_recent():
 	session['token_info'], authorized = get_token(session)
 	session.modified = True

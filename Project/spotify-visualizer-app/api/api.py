@@ -3,7 +3,6 @@ from flask import Flask, request, redirect, session, jsonify, make_response
 import requests
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-import time
 import os
 import unidecode
 
@@ -18,12 +17,12 @@ set CLIENT_ID='9f051e6b07e8444d8653a608d2d28d91'
 set CLIENT_SECRET='95f78cbfa84f4275b0f08cc18230a9d6'
 set SECRET_KEY='\xc4d\r\x84`\x83z]\x19))F\x04\xe8\x8do\x14\xed\xf8|\xf7\xac31'
 '''
-SPOTIPY_CLIENT_ID =os.environ.get('CLIENT_ID')
-SPOTIPY_CLIENT_SECRET =os.environ.get('CLIENT_SECRET')
+SPOTIPY_CLIENT_ID='9f051e6b07e8444d8653a608d2d28d91'
+SPOTIPY_CLIENT_SECRET='95f78cbfa84f4275b0f08cc18230a9d6'
 SPOTIPY_REDIRECT_URI = 'http://localhost:5000/callback'
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
-app.secret_key = os.environ.get('SECRET_KEY')
+app.secret_key = '\xc4d\r\x84`\x83z]\x19))F\x04\xe8\x8do\x14\xed\xf8|\xf7\xac31'
 scopes = "user-read-private user-top-read user-library-read user-read-recently-played user-follow-modify"
 
 @app.route('/')
@@ -38,13 +37,13 @@ def login():
 	return redirect(auth_url)
 @app.route('/index')
 def index():
-	buttons = '<a href="/api/get_recently_added_artists">get_recently_added_artists</a><br>'+'<a href="/api/get_recently_played">get_recently_played</a><br>'+'<a href="/api/get_top_artists">get_top_artists</a>' 
+	buttons = '<a href="/api/get_recently_added_artists">get_recently_added_artists</a><br>'+'<a href="/api/get_recently_played">get_recently_played</a><br>'+'<a href="/api/get_top_artists">get_top_artists</a><br>'+'<a href="/api/get_top_tracks">get_top_tracks</a>'  
 	return buttons
 
-@app.route('/logout')
+@app.route('/api/logout')
 def logout():
 	session.clear()
-	return redirect('/')
+	return '<h3> Logged Out </h3>'
 
 
 @app.route('/callback')
@@ -111,14 +110,29 @@ def get_recent():
 	response = sp.current_user_recently_played()
 	played = []
 	freq = {}
-	for item in response['items']:
+	for item in response['items']: 
 		for artist in item['track']['album']['artists']:
 			played.append(unidecode.unidecode(artist['name']))
-
 	for artist in played:
 		freq[artist] = played.count(artist)
 	freq2 = dict(sorted(freq.items(), key=lambda item: item[1]))
 	return(freq2)
+
+@app.route('/api/get_top_tracks',methods=['GET', 'POST'])
+def get_tracks():
+	session['token_info'], authorized = get_token(session)
+	session.modified = True
+	if not authorized:
+		return redirect('/')
+	sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
+	response = sp.current_user_top_tracks(limit=50,time_range='medium_term')
+	top_tracks = []
+	tracks_popularity = []
+	for item in response['items']:
+		top_tracks.append(item['album']['name'])
+		tracks_popularity.append(item['popularity'])
+	return dict(zip(top_tracks, tracks_popularity))
+
 
 @app.route('/api/get_top_artists',methods=['GET', 'POST'])
 def get_followed():
@@ -127,18 +141,22 @@ def get_followed():
 	if not authorized:
 		return redirect('/')
 	sp = spotipy.Spotify(auth=session.get('token_info').get('access_token'))
-	response = sp.current_user_top_artists(limit=15,time_range='medium_term')
+	response = sp.current_user_top_artists(limit=100,time_range='medium_term')
 	data = []
 	vals = []
+
 	freq = []
 	for item in response['items']:
 		name = item['name']
 		pop = item['popularity']
 		freq.append({'popularity': pop, 'name': name})
 	freq = sorted(freq, key = lambda i: i['popularity'])
+
+
 	for item in freq:
 		data.append(item['popularity'])
 		vals.append(item['name'])
+
 	freq = {k:v for k,v in zip(vals,data)}
 	return freq
 
